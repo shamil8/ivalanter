@@ -3,6 +3,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Organisation;
 use App\Entity\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,24 +13,18 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class UserController extends AbstractController
 {
     /**
-     * @Route("/api/user", methods={"GET"})
+     * @Route("/user", methods={"GET"})
      * @param Request $req
      * @return JsonResponse
      */
     public function getUserProfile(Request $req) :JsonResponse
     {
-        $id = (int) $req->get('id');
-        $users = $this->getDoctrine()->getRepository(User::class)->findAll();
+        $users = $this->getDoctrine()->getRepository(User::class)->find(1)->getOrganisation()[0];
 
-        $name = '';
-
-        /** @var User $user */
-        foreach ($users as $user) {
-            $name = $user->getName(). ' ' .$user->getLastname();
-        }
+        dd($users);
 
         return $this->json([
-            'fullName' => $name,
+            'fullName' => 'Something',
         ]);
     }
 }

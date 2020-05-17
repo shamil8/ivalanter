@@ -41,12 +41,6 @@ class User
     private $date_birth;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\City", inversedBy="UserCity")
-     * @ORM\Column(type="integer", length=11, options={"comment":"Город"})
-     */
-    private $city_id;
-
-    /**
      * @ORM\Column(type="string", length=255, nullable=true, options={"comment":"О себе"})
      */
     private $description;
@@ -72,6 +66,22 @@ class User
      * @ORM\Column(type="integer", nullable=true, options={"comment":"Стаж волонтера (сколько лет)"})
      */
     private $experience;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\City")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $city;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $password;
+
+    /**
+     * @ORM\Column(type="json")
+     */
+    private $roles = [];
 
     public function __construct()
     {
@@ -128,18 +138,6 @@ class User
     public function setDateBirth(\DateTimeInterface $date_birth): self
     {
         $this->date_birth = $date_birth;
-
-        return $this;
-    }
-
-    public function getCity(): ?string
-    {
-        return $this->city_id;
-    }
-
-    public function setCity(int $city_id): self
-    {
-        $this->city_id = $city_id;
 
         return $this;
     }
@@ -214,6 +212,46 @@ class User
     public function setExperience(?int $experience): self
     {
         $this->experience = $experience;
+
+        return $this;
+    }
+
+    public function getCity(): ?City
+    {
+        return $this->city;
+    }
+
+    public function setCity(?City $city): self
+    {
+        $this->city = $city;
+
+        return $this;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    public function getRoles(): ?array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
 
         return $this;
     }

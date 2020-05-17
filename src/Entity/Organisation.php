@@ -31,12 +31,6 @@ class Organisation
     private $area;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\City", inversedBy="OrganistaionCity")
-     * @ORM\Column(type="integer", options={"comment":"Город"})
-     */
-    private $city_id;
-
-    /**
      * @ORM\Column(type="string", length=255, nullable=true, options={"comment":"Об организации"})
      */
     private $about;
@@ -47,6 +41,12 @@ class Organisation
      * @ORM\ManyToMany(targetEntity="App\Entity\User", mappedBy="organisation")
      */
     private $users;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\City")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $city;
 
     public function __construct()
     {
@@ -78,18 +78,6 @@ class Organisation
     public function setArea(string $area): self
     {
         $this->area = $area;
-
-        return $this;
-    }
-
-    public function getCityId(): ?int
-    {
-        return $this->city_id;
-    }
-
-    public function setCityId(int $city_id): self
-    {
-        $this->city_id = $city_id;
 
         return $this;
     }
@@ -130,6 +118,18 @@ class Organisation
             $this->users->removeElement($user);
             $user->removeOrganisation($this);
         }
+
+        return $this;
+    }
+
+    public function getCity(): ?City
+    {
+        return $this->city;
+    }
+
+    public function setCity(?City $city): self
+    {
+        $this->city = $city;
 
         return $this;
     }
